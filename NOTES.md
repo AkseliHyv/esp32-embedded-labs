@@ -77,5 +77,5 @@
     ```
     idf.py -p /dev/ttyACM0 flash monitor
     ```
-    - Exit the monitor with Ctrl+J
+    - Exit the monitor with Ctrl+]
 - Boot log from my ESP32-S3-DevKitC-1: see [ch02-hello](ch02-hello/README.md#results)

@@ -9,8 +9,10 @@ Each lab is a small standalone project focused on one concept. Measurements, bug
 
 | Lab | Topic | What it covers |
 |-----|-------|----------------|
+| `ch00-setup` | Toolchain setup | ESP-IDF on Arch via EIM, USB/JTAG permissions, logic analyzer (notes only) |
 | `ch02-hello` | Toolchain and boot | Build/flash pipeline, boot log, octal flash and PSRAM configuration |
 | `ch03-blink` | Using a driver | Addressable RGB LED over the RMT peripheral, protocol checked with a logic analyzer |
+| `ch04-electricity` | Electronics basics | Supply voltages, resistor codes, LED resistor sizing and current measurement (notes only) |
 | `ch05-gpio-out` | GPIO output | LED via the GPIO driver and via direct register writes (W1TS/W1TC) |
 | `ch06-button` | GPIO input | Pull-ups, contact bounce measured with a logic analyzer, debouncing |
 | `ch07-tasks` | FreeRTOS | Tasks, priorities, relative vs absolute delays, watchdog and stack sizing |
