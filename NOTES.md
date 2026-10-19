@@ -41,6 +41,7 @@
     ```
     sudo usermod -aG uucp $USER
     ```
+    - Group changes only apply after logging out of the whole session (or rebooting). Check with `groups`.
 - Get the location for the udev rules file EIM installed
     ```
     find ~ -name 60-openocd.rules 2>/dev/null
@@ -70,10 +71,11 @@
     idf.py build
     ```
     - Initial build takes longer due to ESP-IDF having to build all of the files from scratch.
-    - Builds after are generally faster (if for example just configs are changed).
+    - Builds after that only recompile the files that changed, so they are faster. Changing config can still
+      cause a big rebuild, since a lot of code depends on the generated config header.
 - Flash them to controller with
     ```
     idf.py -p /dev/ttyACM0 flash monitor
     ```
-    - Exit the monitor with Ctrl+]
+    - Exit the monitor with Ctrl+J
 - Boot log from my ESP32-S3-DevKitC-1: see [ch02-hello](ch02-hello/README.md#results)

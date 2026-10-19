@@ -46,7 +46,7 @@ octal flash and PSRAM, and modify the stock `hello_world` example to print live 
 
 Boot log from the ESP32-S3-DevKitC-1:
 
-- Bootloader: `I (32) boot: ESP-IDF v6.1 2nd stage bootloader`
+- Second-stage bootloader: `I (32) boot: ESP-IDF v6.1 2nd stage bootloader`
 - Chip revision: v0.2
 - Flash size: 32MB
 - Flash mode: SLOW READ
@@ -60,19 +60,36 @@ Boot log from the ESP32-S3-DevKitC-1:
     | 1 | phy_init | RF data | 01 | 01 | 0xf000 | 0x1000 |
     | 2 | factory | factory app | 00 | 00 | 0x10000 | 0x100000 (1MB) |
 
+    The app goes in the `factory` partition, which starts at 0x10000 and is 1MB long.
+
 Program output:
 
 - Free internal heap: 381KB
 - Free PSRAM heap: 16381KB
 - Uptime counter increased by 2 every print, as expected
+- App size (`idf.py size`): 175188 bytes, TODO% of the factory partition
+
+### How the chip boots
+
+1. **ROM bootloader**: burned into the chip at the factory and can't be changed. If GPIO0 (the BOOT button)
+   is held low, it waits for new firmware over USB/UART. Otherwise it loads the second-stage bootloader from
+   flash.
+2. **Second-stage bootloader**: a normal ESP-IDF program. It sets up flash and clocks, reads the partition
+   table at flash offset 0x8000, and loads the app partition.
+3. **App startup**: ESP-IDF sets up memory, PSRAM, the heap and FreeRTOS, then starts a task that calls
+   `app_main()`.
+
+The **partition table** describes how the flash is divided up: NVS storage, RF calibration data, the app.
 
 ## Problems and fixes
 
 - **PSRAM options missing / not taking effect.**
   The stock example's top-level `CMakeLists.txt` has `idf_build_set_property(MINIMAL_BUILD ON)`, which only
-  builds `main` and the components it depends on. Components outside that set (like `esp_psram`) aren't part
-  of the build, so their config options don't apply.
-  Fix: commented out the `MINIMAL_BUILD` line so the full component set is included.
+  builds `main`, the common components and whatever `main` depends on. `esp_psram` is only an optional
+  dependency of the system components, so it gets left out and its config options don't apply. The ESP-IDF
+  build-system docs warn about this for `esp_psram` specifically.
+  Fix: commented out the `MINIMAL_BUILD` line so the full component set is included. Adding `esp_psram` to
+  `PRIV_REQUIRES` in `main/CMakeLists.txt` would also have worked.
 - **`esp_timer.h: No such file or directory`.**
   `main/CMakeLists.txt` lists its dependencies with `PRIV_REQUIRES spi_flash`, and a component can only include
   headers from components it declares. `esp_timer` wasn't listed.
@@ -83,4 +100,5 @@ Program output:
 ```sh
 idf.py set-target esp32s3
 idf.py -p /dev/ttyACM0 build flash monitor
+# Exit the monitor with Ctrl+]
 ```

@@ -1,7 +1,5 @@
-# This file was generated using idf.py save-defconfig or menuconfig [D] key. It can be edited manually.
-# Espressif IoT Development Framework (ESP-IDF) 6.1.0 Project Minimal Configuration
-#
-# default:
+CONFIG_BLINK_LED_GPIO=y
+CONFIG_BLINK_GPIO=8
 CONFIG_IDF_TARGET="esp32s3"
 CONFIG_ESPTOOLPY_OCT_FLASH=y
 CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y
