@@ -1,7 +1,7 @@
 # esp32-embedded-labs
 
 Hands-on embedded systems labs on the ESP32-S3 and STM32, written in C with ESP-IDF and bare-metal ARM.
-These are the learning experiments behind [aksbox](https://github.com/AkseliHyv/aksbox), a handheld game console built from scratch.
+These are the learning experiments behind [aksbox](https://github.com/AkseliHyv/aksbox), a handheld game console.
 
 Each lab is a small standalone project focused on one concept. Measurements, bugs and findings are logged in [NOTES.md](NOTES.md).
 

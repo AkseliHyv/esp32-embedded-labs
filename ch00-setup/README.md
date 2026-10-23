@@ -1,43 +1,36 @@
 # ch00-setup - Software setup on Arch
 
-Installing ESP-IDF, USB permissions, VS Code and PulseView, then proving the toolchain and hardware paths work.
-No code.
+Installing ESP-IDF and the tools, and checking that the board and logic analyzer work.
 
 ## Goal
 
-Get a working ESP-IDF toolchain on Arch, give my user access to the board's serial and JTAG ports, and confirm
-both the DevKit and the logic analyzer are reachable from the PC.
+Set up ESP-IDF on Arch with access to the board's serial and JTAG ports, and check that the DevKit and the logic
+analyzer show up on the PC.
 
 ## What I did
 
-Installed everything as described in [NOTES.md](../NOTES.md#setting-up-the-software-arch) (task 0.1):
+Followed the steps in [NOTES.md](../NOTES.md#setting-up-the-software-arch):
 
-- Base build packages with pacman
-- EIM (ESP-IDF Installation Manager) from Espressif's pacman repository
-- ESP-IDF v6.1 with `eim install`, plus a `get_idf` alias for the activation script
-- Added my user to `uucp` for serial access, and Espressif's OpenOCD udev rule for JTAG access
-- VS Code with the ESP-IDF extension
-- PulseView and the fx2lafw firmware for the logic analyzer
+- Installed EIM from Espressif's pacman repository and ESP-IDF v6.1 with it
+- Added a get_idf alias for the activation script
+- Added my user to the uucp group for serial access, and the OpenOCD udev rule for JTAG
+- Installed VS Code with the ESP-IDF extension, and PulseView for the logic analyzer
 
 ## Results
 
-### Toolchain (task 0.2)
+Toolchain:
 
 ```
-$ get_idf
-You are now using IDF version 6.1.0.
 $ idf.py --version
 ESP-IDF v6.1
 $ xtensa-esp32s3-elf-gcc --version
 xtensa-esp-elf-gcc (crosstool-NG esp-15.2.0_20251204) 15.2.0
 ```
 
-`xtensa-esp32s3-elf-gcc` isn't found in a terminal without `get_idf`, because the cross-compiler is part of
-ESP-IDF's own tools in my home directory, and only the activation script puts it on `PATH`.
+The compiler is only found after running get_idf, because the activation script is what adds ESP-IDF's tools to
+PATH.
 
-### Hardware paths (task 0.3)
+Hardware:
 
-- `cat /dev/ttyACM0` works without sudo and printed output from the board:
-  `W (3372) i2c_scan: No devices found`
-- PulseView finds the analyzer (Saleae Logic, 8 channels) with the fx2lafw driver. A capture with nothing
-  connected gives eight flat lines.
+- /dev/ttyACM0 can be read without sudo and shows output from the board
+- PulseView finds the analyzer with the fx2lafw driver, and an empty capture shows eight flat lines
